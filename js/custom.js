@@ -1,14 +1,3 @@
-var testPeople = [
-  {name: "Spencer", amtPaid: 20, endAmtPaid: 40, pay: [], id: 0, edit: false},
-  {name: "Devon", amtPaid: 10, endAmtPaid: 50, pay: [], id: 1, edit: false},
-  {name: "Pamn", amtPaid: 0, endAmtPaid: 1, pay: [], id: 2, edit: false},
-  {name: "Jim", amtPaid: 30, endAmtPaid: 0, pay: [], id: 3, edit: false},
-  {name: "Joe", amtPaid: 30, endAmtPaid: 0, pay: [], id: 4, edit: false},
-  {name: "Jim", amtPaid: 30, endAmtPaid: 0, pay: [], id: 5, edit: false},
-  {name: "Jim", amtPaid: 30, endAmtPaid: 0, pay: [], id: 6, edit: false},
-  {name: "Jim", amtPaid: 30, endAmtPaid: 0, pay: [], id: 7, edit: false}
-];
-
 var maxInputAmt = 999999;
 
 // taken from https://stackoverflow.com/questions/2901102/how-to-print-a-number-with-commas-as-thousands-separators-in-javascript
