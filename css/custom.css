@@ -1,0 +1,37 @@
+.navbar {
+  color: #ffffff;
+}
+
+.form-inline .form-control {
+  width: 100%;
+}
+
+.results-row {
+  border-style: solid;
+}
+
+.appContents {
+  max-width: 532px;
+}
+
+@media (max-width: 483px) {
+  #appTitle {
+    font-size: 7.75vw;
+  }
+
+  .navbar {
+    height: 68px;
+  }
+}
+
+@media (max-width: 406px) {
+  .btn-outline-primary, .btn-outline-danger, .btn-outline-warning {
+    padding: 0px;
+  }
+}
+
+@media (min-width: 484px) {
+  .navbar {
+    height: 64px;
+  }
+}

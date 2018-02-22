@@ -1,0 +1,185 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Split the Bill</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Cusom CSS -->
+    <link rel="stylesheet" href="css/custom.css">
+
+    <link rel="shortcut icon" href="../_Images/s_favicon.png" />
+  </head>
+
+  <body>
+
+    <!-- Vue Framework -->
+    <script src="https://unpkg.com/vue"></script>
+
+    <div id="app" style="display: none;">
+
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4 row flex-nowrap justify-content-between align-items-center">
+
+        <div class="col-3 pt-1 text-center">
+          <a class="text-muted" href="https://spencer.sasarita.com?subject=projects">Other Projects</a>
+        </div>
+
+        <div class="col-6 text-center">
+          <h1 id="appTitle">Split The Bill</h1>
+        </div>
+
+        <div v-on:click="start = false;" class="col-3 d-flex justify-content-end align-items-center">
+          <button v-if="start" type="button" class="text-muted btn btn-link">Info</button>
+          <div v-else class="w-100"></div>
+        </div>
+
+      </nav>
+
+      <main role="main" class="container pb-5 appContents">
+
+        <div v-if="start">
+
+          <div class="row justify-content-center">
+
+            <div class="col">
+
+              <div class="row">
+
+                <div class="col-5">
+                  <strong>Name</strong>
+                </div>
+
+                <div class="col-4">
+                  <strong>Amount Paid</strong>
+                </div>
+
+              </div>
+
+              <person-display
+                v-on:deletedperson="personDeleted"
+                v-on:updated="updatePerson"
+                v-if="numPeople > 0"
+                v-for="person in people"
+                v-bind:person="person"
+                v-bind:key="person.id">
+              </person-display>
+
+              <form onsubmit="false;" class="mt-1 row form-inline">
+                <div class="col-5">
+                  <input id="nameInput" v-on:keyup.enter="addToList" type="text" maxlength="18" name="name" class="form-control" v-model="inputName" placeholder="Name" autofocus>
+                </div>
+
+                <div class="col-4">
+                  <input v-on:keyup.enter="addToList" class="form-control" type="number" max="9999" min="0" step="0.01" data-number-to-fixed="2" data-number-stepfactor="100"  placeholder="0.00" v-model="inputAmt">
+                </div>
+
+                <div class="col-3">
+                  <button type="button" v-on:click="addToList" class="w-100 btn btn-outline-primary">
+                    Add
+                  </button>
+                </div>
+              </form>
+
+              <div v-if="totalPaid > 0 && people.length > 1" class="row pt-2">
+
+                <div class="col-5 col-sm-5">
+                  <strong>Total Paid</strong>
+                </div>
+
+                <div class="col-4 col-sm-5">
+                  <strong>${{ totalPaid.toFixed(2) }}</strong>
+                </div>
+
+              </div>
+
+              <div v-if="totalPaid > 0 && people.length > 1" class="row">
+
+                <div class="col-5 col-sm-5">
+                  <strong>Average Paid</strong>
+                </div>
+
+                <div class="col-4 col-sm-5">
+                  <strong>${{ avgPaid.toFixed(2) }}</strong>
+                </div>
+
+              </div>
+
+              <div v-if="people.length > 1" class="row">
+                <div class="col-auto">
+                  <button type="button" v-on:click="reset" class="btn btn-danger">Reset</button>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <div v-if="calculated && totalPaid > 0" class="row pt-3 justify-content-center mb-0">
+            <h2 class="mb-0 pb-0">Results</h2>
+          </div>
+
+          <div v-if="calculated" v-for="person in people" class="appContents">
+
+            <div v-if="person.pay.length > 0" class="row results-row mt-3">
+
+              <div class="col-4">
+                <strong>{{ person.name }}</strong>
+              </div>
+
+              <div class="col-8">
+
+                <div v-for="payInfo in person.pay" class="row">
+
+                  <div class="col-7">
+                    owes {{ payInfo.personOwed }}
+                  </div>
+
+                  <div class="col-5 text-right">
+                    {{ "$" + payInfo.amtOwed.toFixed(2) }}
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+
+        </div>
+
+        <div v-else class="jumbotron mt-5">
+          <h1 class="text-center">Info</h1>
+          <p class="lead mt-3">Quickly determine how to settle up on shared expenses&mdash;groceries, dinner, gift, etc.</p>
+          <ul >
+            <li>Enter names and payment amounts to calculate how to settle up with one another.</li>
+            <li>After information for at least 2 people have been added, the results will display at the bottom.</li>
+            <li>Edit previously entered values by selecting them.</li>
+            <li>Maximum "Amount Paid" is limited to ${{ this.maxInputAmtStr }}.</li>
+          </ul>
+          <div class="row justify-content-center">
+            <button type="button" v-on:click="startApp" class="btn btn-lg btn-outline-success col-auto" role="button">Back to App &raquo;</button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
+    <!-- Custom JavaScript for SplitTheBill -->
+    <script src="js/custom.js"></script>
+
+  </body>
+</html>
